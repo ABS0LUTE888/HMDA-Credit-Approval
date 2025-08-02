@@ -1,6 +1,8 @@
 defaults:
   - data: snapshot
   - paths
+  - processing
   - _self_
 
 year: 2024
+seed: 8888
