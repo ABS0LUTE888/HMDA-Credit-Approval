@@ -1,0 +1,6 @@
+defaults:
+  - data: snapshot
+  - paths
+  - _self_
+
+year: 2024

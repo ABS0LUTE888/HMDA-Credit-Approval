@@ -1,0 +1,2 @@
+raw_dir: "data/raw/${year}"
+csv_path: "${raw_dir}/${year}_public_lar.csv"

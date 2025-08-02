@@ -1,0 +1,3 @@
+base_s3: "https://s3.amazonaws.com/cfpb-hmda-public/prod"
+product: "snapshot-data"
+file_template: "${.base_s3}/${.product}/${year}/${year}_public_lar_csv.zip"
