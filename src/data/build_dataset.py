@@ -1,7 +1,12 @@
+"""
+Load cleaned data, build preprocessing pipelines, split into train/val, and save the processed dataset
+"""
+
 from pathlib import Path
 
 import hydra
 import joblib
+import numpy as np
 import pyarrow.dataset as ds
 import scipy.sparse as sp
 from omegaconf import DictConfig
@@ -20,46 +25,68 @@ def main(cfg: DictConfig) -> None:
     if not processed_dir.exists():
         raise FileNotFoundError("Run the cleaning script first")
 
+    # Load cleaned parquet to pandas
     table = ds.dataset(processed_dir, format="parquet").to_table().combine_chunks()
     df = table.to_pandas()
 
+    # Column lists from config
     num_cols = [c for c in cfg.features.numeric if c in df.columns]
     cat_cols = [c for c in cfg.features.categorical if c in df.columns]
 
+    # Build X/y
     X = df[num_cols + cat_cols]
     y = df["target_approved"].astype("int8")
 
-    assert "action_taken", "denial_reason_1" not in X.columns
+    # Additional integrity check
+    assert set(X) == set(cfg.allowed_cols)
 
+    # Pipelines
     num_pipe = Pipeline(
-        [("impute", SimpleImputer(strategy="median")), ("scale", StandardScaler())]
+        steps=[
+            ("impute", SimpleImputer(strategy="median")),
+            ("scale", StandardScaler()),
+        ]
     )
 
     cat_pipe = Pipeline(
-        [
+        steps=[
             ("impute", SimpleImputer(strategy="most_frequent")),
-            ("onehot", OneHotEncoder(handle_unknown="ignore", sparse_output=True)),
+            ("onehot", OneHotEncoder(handle_unknown="ignore", sparse_output=True, dtype=np.float32)),
         ]
     )
 
     preproc = ColumnTransformer(
-        [("num", num_pipe, num_cols), ("cat", cat_pipe, cat_cols)]
+        transformers=[
+            ("num", num_pipe, num_cols),
+            ("cat", cat_pipe, cat_cols),
+        ],
+        sparse_threshold=1.0,
     )
 
+    # Split & fit preprocessor on the train split
     X_tr, X_val, y_tr, y_val = train_test_split(
         X, y, test_size=0.20, stratify=y, random_state=seed
     )
     preproc.fit(X_tr)
 
+    # Ensure label has a stable name
+    y_tr.name = "target"
+    y_val.name = "target"
+
+    # Save dataset
+    X_tr = preproc.transform(X_tr).astype(np.float32)
+    X_val = preproc.transform(X_val).astype(np.float32)
+
     dataset_dir = Path(cfg.dataset_dir)
     dataset_dir.mkdir(exist_ok=True, parents=True)
+
     joblib.dump(preproc, dataset_dir / "preprocessor.pkl")
-    sp.save_npz(dataset_dir / "X_train.npz", preproc.transform(X_tr))
-    sp.save_npz(dataset_dir / "X_val.npz", preproc.transform(X_val))
+    sp.save_npz(dataset_dir / "X_train.npz", X_tr)
+    sp.save_npz(dataset_dir / "X_val.npz", X_val)
     y_tr.to_csv(dataset_dir / "y_train.csv", index=False)
     y_val.to_csv(dataset_dir / "y_val.csv", index=False)
 
-    print(f"Dataset saved to {dataset_dir}")
+    print(f"X_train shape: {X_tr.shape}", f"Dataset saved to {dataset_dir}", sep="\n")
 
 
 if __name__ == "__main__":
