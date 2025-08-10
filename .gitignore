@@ -212,3 +212,6 @@ outputs/
 # Data folder
 data/
 !src/data
+
+# Artifacts folder
+artifacts/
