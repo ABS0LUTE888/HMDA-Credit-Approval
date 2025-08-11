@@ -2,6 +2,7 @@ defaults:
   - data: snapshot
   - paths
   - processing
+  - model: decision_tree
   - _self_
 
 year: 2024

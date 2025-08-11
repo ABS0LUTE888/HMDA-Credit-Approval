@@ -1,0 +1,7 @@
+name: "decision_tree"
+n_jobs: 4
+cv: 5
+scoring: "roc_auc"
+verbose: 4
+max_depth: [ 4, 6, 8, 10 ]
+min_samples_leaf: [ 10, 50, 100 ]
