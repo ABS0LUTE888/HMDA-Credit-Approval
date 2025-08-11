@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import importlib
+import pkgutil
 from typing import Callable, Dict
 
 from omegaconf import DictConfig
@@ -8,6 +10,33 @@ from .base import BaseModel
 
 # Registry
 MODELS: Dict[str, Callable[[DictConfig], BaseModel]] = {}
+
+_DISCOVERED = False
+
+
+def _discover_models() -> None:
+    """Import all model modules in this package so @register decorators run"""
+    global _DISCOVERED
+    if _DISCOVERED:
+        return
+
+    pkg_name = __package__
+    if not pkg_name:
+        return
+
+    pkg = importlib.import_module(pkg_name)
+
+    for _finder, modname, ispkg in pkgutil.walk_packages(
+            pkg.__path__, prefix=pkg.__name__ + "."
+    ):
+        if ispkg:
+            continue
+        leaf = modname.rsplit(".", 1)[-1]
+        if leaf in {"base", "registry", "__init__"} or leaf.startswith("_"):
+            continue
+        importlib.import_module(modname)
+
+    _DISCOVERED = True
 
 
 def register(name: str | None = None):
@@ -29,6 +58,8 @@ def create(name: str, cfg: DictConfig) -> BaseModel:
     Make an instance of a registered model by name.
     Raises KeyError if the model is not found.
     """
+    _discover_models()
+
     try:
         return MODELS[name](cfg)
     except KeyError as e:
