@@ -19,7 +19,7 @@ class DecisionTreeModel(SciKitModel):
         super().__init__(cfg)
 
     def build(self) -> Any:
-        return DecisionTreeClassifier(random_state=self.seed)
+        return DecisionTreeClassifier(random_state=self.seed, class_weight="balanced")
 
     def param_grid(self) -> Dict[str, Any]:
         return {
