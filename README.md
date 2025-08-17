@@ -75,11 +75,16 @@ HMDA-Credit-Approval/
    python -m src.scripts.train
    ```
 
-5. _TBD_
+5. Run the evaluation script:
+
+   ```bash
+   python -m src.scripts.evaluate
+   ```
+
+6. _TBD_
 
 ## Coming Soon
 
-- Evaluation script
 - XGBoost model
 - REST API
 - Dockerfile for easy deployment

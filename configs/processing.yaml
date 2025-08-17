@@ -46,3 +46,5 @@ allowed_cols: [
   manufactured_home_secured_property_type,
   manufactured_home_land_property_interest
 ]
+
+threshold: 0.5
