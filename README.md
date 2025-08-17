@@ -107,6 +107,14 @@ Performance:
 }
 ```
 
+Confusion Matrix:
+
+<img width="960" height="720" alt="confusion_matrix" src="https://github.com/user-attachments/assets/a1423d03-ea06-48c7-aa19-58eb3c0d9160" />
+
+ROC Curve:
+
+<img width="960" height="720" alt="roc_curve" src="https://github.com/user-attachments/assets/cd773881-c0be-4dd3-941f-8b06d9fd826d" />
+
 ### XGBClassifier (XGBoost)
 
 To train or evaluate with `XGBoost`:
@@ -127,6 +135,14 @@ Performance:
   "f1": 0.8326345724983121
 }
 ```
+
+Confusion Matrix:
+
+<img width="960" height="720" alt="confusion_matrix" src="https://github.com/user-attachments/assets/4a8c863d-b079-4bbc-8d9c-b359df3898ab" />
+
+ROC Curve:
+
+<img width="960" height="720" alt="roc_curve" src="https://github.com/user-attachments/assets/780acc48-c341-4d89-a079-7fb7d7e6b132" />
 
 ## Coming Soon
 
