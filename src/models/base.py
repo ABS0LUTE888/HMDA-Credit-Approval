@@ -68,6 +68,7 @@ class SciKitModel(BaseModel, ABC):
         self._cv: int = cfg.model.cv
         self._scoring: str = cfg.model.scoring
         self._verbose: int = cfg.model.verbose
+        self.data: Optional[DataBundle] = None
 
     @abstractmethod
     def build(self) -> Any:
@@ -79,6 +80,7 @@ class SciKitModel(BaseModel, ABC):
         return None
 
     def train(self, data: DataBundle) -> Tuple[Any, Dict[str, Any]]:
+        self.data = data
         est = self.build()
         grid = self.param_grid()
 

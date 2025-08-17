@@ -26,7 +26,8 @@ HMDA-Credit-Approval/
 │ │ ├─ clean.py           # Cleans and preprocesses raw data (handling NaNs, formatting, etc.)
 │ │ └─ build_dataset.py   # Builds final dataset ready for training (feature engineering, splits)
 │ └─ scripts/
-│   └─ train.py           # Trains decision tree model on prepared dataset and saves model
+│   ├─ train.py           # Trains decision tree model on prepared dataset and saves model
+│   └─ evaluate.py        # Loads a trained model and test dataset, computes evaluation metrics
 ├─ .gitignore
 ├─ LICENSE
 ├─ README.md
@@ -83,11 +84,55 @@ HMDA-Credit-Approval/
 
 6. _TBD_
 
+## Models
+
+### DecisionTreeClassifier (Scikit-learn)
+
+To train or evaluate with a `Decision Tree`:
+
+```bash
+python -m src.scripts.train model=decision_tree
+python -m src.scripts.evaluate model=decision_tree
+```
+
+Performance:
+
+```json
+{
+  "auroc": 0.7831595589465814,
+  "accuracy": 0.7396051706557055,
+  "precision": 0.8683231130002981,
+  "recall": 0.7709753220706146,
+  "f1": 0.8167587760526401
+}
+```
+
+### XGBClassifier (XGBoost)
+
+To train or evaluate with `XGBoost`:
+
+```bash
+python -m src.scripts.train model=xgboost
+python -m src.scripts.evaluate model=xgboost
+```
+
+Performance:
+
+```json
+{
+  "auroc": 0.830525842932744,
+  "accuracy": 0.7645003659025991,
+  "precision": 0.89519747863669,
+  "recall": 0.7782451454194147,
+  "f1": 0.8326345724983121
+}
+```
+
 ## Coming Soon
 
-- XGBoost model
 - REST API
 - Dockerfile for easy deployment
+- Other models
 
 ## License
 
