@@ -7,6 +7,7 @@ from pathlib import Path
 import hydra
 import joblib
 import numpy as np
+import pandas as pd
 import pyarrow.dataset as ds
 import scipy.sparse as sp
 from omegaconf import DictConfig
@@ -85,6 +86,10 @@ def main(cfg: DictConfig) -> None:
     sp.save_npz(dataset_dir / "X_val.npz", X_val)
     y_tr.to_csv(dataset_dir / "y_train.csv", index=False)
     y_val.to_csv(dataset_dir / "y_val.csv", index=False)
+
+    feature_names = preproc.get_feature_names_out()
+
+    pd.Series(feature_names, name="feature").to_csv(dataset_dir / "feature_names.csv", index=False, header=False)
 
     print(f"X_train shape: {X_tr.shape}", f"Dataset saved to {dataset_dir}", sep="\n")
 
