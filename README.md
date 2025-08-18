@@ -120,11 +120,11 @@ Performance:
 
 Confusion Matrix:
 
-<img width="960" height="720" alt="confusion_matrix" src="https://github.com/user-attachments/assets/a1423d03-ea06-48c7-aa19-58eb3c0d9160" />
+<img width="960" height="720" alt="confusion_matrix" src="https://github.com/user-attachments/assets/a347d1ce-f0d6-4894-b447-46ff544e9abd" />
 
 ROC Curve:
 
-<img width="960" height="720" alt="roc_curve" src="https://github.com/user-attachments/assets/cd773881-c0be-4dd3-941f-8b06d9fd826d" />
+<img width="960" height="720" alt="roc_curve" src="https://github.com/user-attachments/assets/afd7a2c4-a2ee-424e-b3e0-a781f6788f9d" />
 
 ### XGBClassifier (XGBoost)
 
@@ -149,11 +149,11 @@ Performance:
 
 Confusion Matrix:
 
-<img width="960" height="720" alt="confusion_matrix" src="https://github.com/user-attachments/assets/4a8c863d-b079-4bbc-8d9c-b359df3898ab" />
+<img width="960" height="720" alt="confusion_matrix" src="https://github.com/user-attachments/assets/848dc615-6865-4264-a629-d94304aebdf8" />
 
 ROC Curve:
 
-<img width="960" height="720" alt="roc_curve" src="https://github.com/user-attachments/assets/780acc48-c341-4d89-a079-7fb7d7e6b132" />
+<img width="960" height="720" alt="roc_curve" src="https://github.com/user-attachments/assets/ece4233c-31fd-4d94-9d39-6726b63cf3ef" />
 
 ### Adding custom models
 
