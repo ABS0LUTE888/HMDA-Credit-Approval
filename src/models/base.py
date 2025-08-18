@@ -40,20 +40,19 @@ class BaseModel(ABC):
         """Return predictions (labels)"""
         raise NotImplementedError
 
+    @abstractmethod
     def predict_proba(self, X):
         """
         Return class probabilities from the trained model
         """
-        if self.est_ is None:
-            raise RuntimeError("Model is not trained. Call train() first")
-        if hasattr(self.est_, "predict_proba"):
-            return self.est_.predict_proba(X)
-        raise AttributeError(f"{self.__class__.__name__} has no predict_proba()")
+        raise NotImplementedError
 
+    @abstractmethod
     def evaluate(self, data: DataBundle) -> Dict[str, Any]:
         """Evaluate model performance on validation data"""
         raise NotImplementedError
 
+    @abstractmethod
     def export_pipeline(self, preprocessor_path: Path, out_path: Path) -> Path:
         """
         Combine preprocessing and trained model into one pipeline, then save it
@@ -64,10 +63,11 @@ class BaseModel(ABC):
 class SciKitModel(BaseModel, ABC):
     def __init__(self, cfg: DictConfig):
         super().__init__(cfg)
-        self._n_jobs: int = cfg.model.n_jobs
-        self._cv: int = cfg.model.cv
-        self._scoring: str = cfg.model.scoring
-        self._verbose: int = cfg.model.verbose
+        self._n_jobs: int = cfg.model.tuning.n_jobs
+        self._cv: int = cfg.model.tuning.cv
+        self._scoring: str = cfg.model.tuning.scoring
+        self._verbose: int = cfg.model.tuning.verbose
+        self.params: Dict[str, Any] = dict(cfg.model.params)
         self.data: Optional[DataBundle] = None
 
     @abstractmethod
@@ -76,8 +76,10 @@ class SciKitModel(BaseModel, ABC):
         raise NotImplementedError
 
     def param_grid(self) -> Optional[Dict[str, Any]]:
-        """Return parameter grid for hyperparameter tuning"""
-        return None
+        param_grid = getattr(self.cfg.model.tuning, "param_grid")
+        param_grid = dict(param_grid) if param_grid else None
+
+        return param_grid
 
     def train(self, data: DataBundle) -> Tuple[Any, Dict[str, Any]]:
         self.data = data
@@ -110,6 +112,13 @@ class SciKitModel(BaseModel, ABC):
         if self.est_ is None:
             raise RuntimeError("Model is not trained. Call train() first")
         return self.est_.predict(X)
+
+    def predict_proba(self, X):
+        if self.est_ is None:
+            raise RuntimeError("Model is not trained. Call train() first")
+        if hasattr(self.est_, "predict_proba"):
+            return self.est_.predict_proba(X)
+        raise AttributeError(f"{self.__class__.__name__} has no predict_proba()")
 
     def evaluate(self, data: DataBundle) -> Dict[str, Any]:
         if data.X_val is None or data.y_val is None:

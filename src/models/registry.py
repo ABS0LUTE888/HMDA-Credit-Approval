@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import importlib
 import pkgutil
-from typing import Callable, Dict
+from typing import Callable, Dict, List
 
 from omegaconf import DictConfig
 
@@ -69,3 +69,10 @@ def create(name: str, cfg: DictConfig) -> BaseModel:
 def from_cfg(cfg: DictConfig) -> BaseModel:
     """Create a model using cfg.model.name"""
     return create(cfg.model.name, cfg)
+
+
+def get_models() -> List[str]:
+    """Get list of registered models"""
+    _discover_models()
+
+    return list(MODELS.keys())

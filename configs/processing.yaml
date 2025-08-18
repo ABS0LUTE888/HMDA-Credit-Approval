@@ -4,7 +4,8 @@ features:
     total_units,
     multifamily_affordable_units,
     income,
-    debt_to_income_ratio,
+    loan_term,
+    intro_rate_period,
   ]
 
   categorical: [
@@ -21,10 +22,6 @@ features:
     other_nonamortizing_features,
     construction_method,
     occupancy_type,
-    applicant_credit_score_type,
-    co_applicant_credit_score_type,
-    derived_loan_product_type,
-    derived_dwelling_category,
     manufactured_home_secured_property_type,
     manufactured_home_land_property_interest
   ]
@@ -35,16 +32,38 @@ label:
   denied: [ 3, 7 ]
 
 allowed_cols: [
-  loan_amount, total_units, multifamily_affordable_units,
-  income, debt_to_income_ratio, preapproval,
-  loan_type, loan_purpose, lien_status, reverse_mortgage,
-  open_end_line_of_credit, business_or_commercial_purpose,
-  negative_amortization, interest_only_payment, balloon_payment,
-  other_nonamortizing_features, construction_method, occupancy_type,
-  applicant_credit_score_type, co_applicant_credit_score_type,
-  derived_loan_product_type, derived_dwelling_category,
+  # Core loan details
+  loan_amount,
+  loan_term,
+  intro_rate_period,
+
+  # Loan category
+  loan_type,
+  loan_purpose,
+  lien_status,
+  reverse_mortgage,
+  open_end_line_of_credit,
+  business_or_commercial_purpose,
+
+  # Applicant
+  income,
+  preapproval,
+
+  # Property
+  total_units,
+  multifamily_affordable_units,
+  construction_method,
+  occupancy_type,
+
+  # Manufactured home details
   manufactured_home_secured_property_type,
-  manufactured_home_land_property_interest
+  manufactured_home_land_property_interest,
+
+  # Product features
+  negative_amortization,
+  interest_only_payment,
+  balloon_payment,
+  other_nonamortizing_features,
 ]
 
 threshold: 0.5
